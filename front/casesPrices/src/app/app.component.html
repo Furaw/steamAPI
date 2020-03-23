@@ -1,0 +1,10 @@
+<input #caseName>
+<button (click)="getPrice(caseName.value)">Get price</button>
+
+<div *ngFor="let case of cases">
+  <div *ngIf="case.name">
+    <p>{{case.name}}</p>
+    <p>Lowest Price: {{case.lowestPrice}}</p>
+    <p>Median Price: {{case.medianPrice}}</p>
+  </div>
+</div>
