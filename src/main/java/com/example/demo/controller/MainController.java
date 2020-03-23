@@ -2,7 +2,9 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.Case;
 import com.example.demo.repository.CaseRepository;
+import com.google.gson.JsonObject;
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,6 +15,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
+
+import static org.springframework.data.repository.init.ResourceReader.Type.JSON;
 
 
 @Controller
@@ -25,13 +29,7 @@ public class MainController {
         this.caseRepository = caseRepository;
     }
 
-
-    @GetMapping("/")
-    public String defaultPage() {
-        return "greeting";
-    }
-
-
+    @CrossOrigin(origins = "http://localhost:4200")
     @RequestMapping("/getAllCases")
     @ResponseBody
     public List<Case> getAllCases(Model model){
@@ -40,7 +38,7 @@ public class MainController {
         return caseRepository.findAll();
     }
 
-
+    @CrossOrigin(origins = "http://localhost:4200")
     @RequestMapping("/addCase")
     @ResponseBody
     public String addCase(@RequestBody Case smallcase){
@@ -58,7 +56,7 @@ public class MainController {
 
 
 
-
+    @CrossOrigin(origins = "http://localhost:4200")
     @RequestMapping("/updateCaseById")
     @ResponseBody
     public String updateCaseById(@RequestBody Case smallCase)  {
@@ -77,11 +75,11 @@ public class MainController {
     }
 
 
-
+    @CrossOrigin(origins = "http://localhost:4200")
     @RequestMapping("/deleteCaseById")
     @ResponseBody
-    public String deleteCaseById(@RequestBody String id){
-        caseRepository.deleteById(Long.valueOf(id));
+    public String deleteCaseById(@RequestBody Case smallCase){
+        caseRepository.deleteById(Long.valueOf(smallCase.getId()));
 
                String inputLine = "{success:true}";
         StringBuffer response = new StringBuffer();
@@ -93,12 +91,10 @@ public class MainController {
 
     }
 
-
-
     @CrossOrigin(origins = "http://localhost:4200")
-    @RequestMapping("/getPrice")
+    @GetMapping("/getPrice")
     @ResponseBody
-    public String getPrice(@RequestBody String caseName) throws IOException, JSONException {
+    public String asd(@RequestParam String caseName) throws IOException, JSONException {
         String url = "https://steamcommunity.com/market/priceoverview/?appid=730&currency=18&market_hash_name="
                 +caseName+"%20Case";
         URL obj = new URL(url);
@@ -121,8 +117,11 @@ public class MainController {
         //print in String
         System.out.println(response.toString());
         return  response.toString();
+        /*JsonObject value = new JsonObject();
+        value.addProperty("lowest_price", "123");
+        value.addProperty("median_price", "32");
+        return value.toString();*/
     }
-
 
 }
 
